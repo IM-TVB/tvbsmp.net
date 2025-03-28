@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNKNOW</title>
+    <style>
+        body {
+            display: flex;
+            overflow-y: hidden;
+            margin: 0em;
+            background-color: rgba(255, 192, 203, 0.300);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .bar-enter {
+            background-color: rgba(255, 192, 203, 0.500);
+            width: 150px;
+            margin: 0;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.500);
+            height: 200vh;
+        }
+
+        .but {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 130px;
+            margin: 10px;
+            box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.500);
+            height: 13vh;
+            border-radius: 20px;
+            background-color: rgba(255, 192, 203, 0.700);
+        }
+
+        .server-list {
+            display: flex;
+            overflow-y: auto;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 200vh;
+            height: 100vh;
+        }
+
+        .server {
+            margin: 0;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            background-color: rgba(255, 192, 203, 0.900);
+            width: 30vh;
+            height: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="bar-enter" id="lobby">
+      <div class="but one"><a href="https://im-tvb.github.io/tvbsmp.net/menu/lobby.html">LOBBY</a></div>
+      <div class="but two"><a href="https://im-tvb.github.io/tvbsmp.net/menu/ranks.html">RANKS</a></div>
+      <div class="but three"><a href="https://im-tvb.github.io/tvbsmp.net/menu/discord.html">DISCORD</a></div>
+    </div>
+
+    <div class="server-list">
+        <div class="server smp">SMP</div>
+        <div class="server plot">PLOT</div>
+        <div class="server boxpvp">BOXPVP</div>
+    </div>
+</body>
+</html>
