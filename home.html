@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME</title>
+    <link rel="icon" href="https://cdn.discordapp.com/attachments/1347218441135980546/1355750486925508811/Magma.jpg?ex=67ea1088&is=67e8bf08&hm=b66d80759c788b453bfee6562cdae1afb72b29570eef5fbe33772a5689513134&" type="image/x-icon">
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.900);
+        }
+
+        .a1 {
+            width: 98%;
+            display: flex;
+            justify-content: center;
+            max-width: 500vh;
+        }
+
+        .toolbar {
+            align-items: center;
+            border-radius: 3vh;
+            width: 90%;
+            max-width: 2048;
+            display: flex;
+            justify-content: end;
+            height: 9vh;
+            background-color: rgba(0, 0, 0, 0.400);
+        }
+
+        .discord {
+            font-size: 3vh;
+            color: #fff;
+            display: flex;
+            border-radius: 5px;
+            background-color: gray;
+            font-display: 0;
+        }
+
+        .button {
+            background-color: gray;
+            cursor: pointer;
+            font-size: 3vh;
+            border-radius: 1vh;
+            background-color: lime;
+            border: none;
+        }
+
+        .input {
+            border: none;
+            color: orange;
+            border-radius: 1vh;
+            background-color: green;
+            font-size: 3vh;
+        }
+
+        .click {
+            background-color: rgba(0, 0, 0, 0.600);
+            width: 100vh;
+            height: 2vh;
+        }
+
+        .a2 {
+            max-width: 500vh;
+            width: 98%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+
+        .magmamc {
+            width: 99%;
+            display: flex;
+            max-width: 500vh;
+        }
+
+        .ranks {
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.100);
+            border-radius: 5vh;
+            width: 99%;
+            max-width: 500vh;
+            height: 100vh;
+        }
+
+        .rank {
+            font-size: 5vh;
+            color: lime;
+            text-align: center;
+            width: 40vh;
+            border-radius: 5vh;
+            height: 60vh;
+        }
+
+        .vip {
+            background-size: 150vh;
+            background-image: url(https://preview.redd.it/a-piece-of-nature-from-my-survival-world-v0-ulm4cu7ftxde1.png?width=640&crop=smart&auto=webp&s=c82a8513d805b7cd51805ba17285fb91c2541bb1);
+        }
+
+        .mvp {
+            background-size: 150vh;
+            background-image: url(https://preview.redd.it/here-are-some-wallpapaer-i-made-fell-free-to-share-ideas-of-v0-7buzb5xztqhb1.png?width=640&crop=smart&auto=webp&s=58a2f1d72fb5cd016d68e74bcb6b2c35b95bb000);
+        }
+
+        .mvpp {
+            background-size: 150vh;
+            background-image: url(https://i.pinimg.com/736x/f7/4c/e6/f74ce6007b53858d32503641f6dd88ba.jpg);
+        }
+    </style>
+</head>
+<body>
+    <div class="a1">
+        <div class="toolbar">
+            <button class="button" onclick="copyText()">Get IP</button>
+            <input class="input" type="text" value="magmamc.xyz:25561" id="myInput" readonly>
+            <a href="https://discord.gg/RmMB4asysC" class="discord" role="link" tabindex="0" styles="0">Discord</a>
+        </div>
+    </div>
+    <div class="ranks">
+        <div class="rank vip">
+            <h4>VIP</h4>
+            <p>This Rank $5</p>
+            <p>Rank Best</p>
+        </div>
+        <div class="rank mvp">
+            <h4>VIP</h4>
+            <p>This Rank $10</p>
+            <p>Rank The Best</p>
+        </div>
+        <div class="rank mvpp">
+            <h4>VIP</h4>
+            <p>This Rank $15</p>
+            <p>Rank Super Best</p>
+        </div>
+    </div>
+    <script>
+        function copyText() {
+            var copyText = document.getElementById("myInput");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
+    </script>
+</body>
+</html>
