@@ -3,70 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranks Preview</title>
-    <link class="icon" rel="icon" type="image/png" href="https://yt3.googleusercontent.com/WyCuvetjT8C0I2k8lQj9ziMd0Y4EWxoD9ojEASvrRPTo4mq8cDbTx7WvwIaoCCKFNdYMG_HyzA=s160-c-k-c0x00ffffff-no-rj">
+    <title>Preview Ranks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://im-tvb.github.io/tvbsmp.net/server-icon.png" type="image/x-icon">
     <style>
         body {
+            background-color: #333;
+        }
+
+        .idk {
+            background-color: #333;
+            width: 90%;
             display: flex;
-            overflow-y: hidden;
-            margin: 0em;
-            background-color: rgba(255, 192, 203, 0.300);
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            align-items: center;
+            justify-content: end;
+            height: 40px;
+            max-width: 2048px;
         }
 
-        .bar-enter {
-            background-color: rgba(255, 192, 203, 0.500);
-            width: 150px;
-            margin: 0;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.500);
-            height: 200vh;
+        .link {
+        text-decoration: none;
+        color: #fff;
+        margin: 10px;
+        font-family: Lucida sans;
         }
 
-        .but {
+        .aidk {
+            display: flex;
+            justify-content: center;
+        }
+
+        .rank-title {
+            background-color: #fff;
+            font-family: 'Secular one';
+            font-size: 30px;
+            border-radius: 15px;
+            color: #444;
+            height: 110px;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 130px;
-            margin: 10px;
-            box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.500);
-            height: 13vh;
-            border-radius: 20px;
-            background-color: rgba(255, 192, 203, 0.700);
         }
 
-        .ranks {
+        .ph {
+            margin: 20px;
             display: flex;
-            overflow-y: auto;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 200vh;
-            height: 100vh;
-        }
-
-        .rank {
-            margin: 0;
-            border-radius: 30px;
-            display: flex;
-            box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.482);
             justify-content: center;
-            background-color: rgba(255, 192, 203, 0.900);
-            width: 30vh;
-            height: 70vh;
+            align-items: center;
+            border-radius: 15px;
+            width: 100px;
+            height: 100px;
         }
+
+        .smp, .plot, .boxpvp {
+            background-size: 100px;
+            background-image: url(https://i.pinimg.com/564x/f3/5c/9f/f35c9f7d93b611b15fbfc1e3ac0503f0.jpg);
+        }
+
+        .apho {
+            display: flex;
+            justify-content: center;
+        }
+
+        .but {
+        background-color: #fff;
+        font-family: 'Secular one';
+        box-shadow: 5px 5px 5px rgb(0, 255, 21), -5px -5px 5px rgb(0, 132, 255);
+        margin: 10px;
+        border-radius: 5px;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        height: 50px;
+    }
+
+    .photo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .tex {
+        background-color: #fff;
+        font-family: 'Secular one';
+        width: 80%;
+        max-width: 2048px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #444;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px rgb(0, 255, 21), -5px -5px 5px rgb(0, 132, 255);
+    }
+
+    .iel {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 300px;
+    }
     </style>
 </head>
 <body>
-    <div class="bar-enter" id="lobby">
-      <div class="but one"><a href="https://im-tvb.github.io/tvbsmp.net/lobby.html">LOBBY</a></div>
-      <div class="but two"><a href="https://im-tvb.github.io/tvbsmp.net/ranks.html">RANKS</a></div>
-      <div class="but three"><a href="https://im-tvb.github.io/tvbsmp.net/discord.html">DISCORD</a></div>
+    <div class="aidk">
+        <div class="idk">
+            <a class="link" href="https://im-tvb.github.io/tvbsmp.net/home">Home</a>
+            <a class="link" href="https://discord.gg/8PgyX2apEw">Report</a>
+            <a class="link" href="https://discord.gg/8PgyX2apEw">Discord</a>
+        </div>
     </div>
-
-    <div class="ranks">
-        <div class="rank vip">VIP</div>
-        <div class="rank mvp">MVP</div>
-        <div class="rank mvp+">MVP+</div>
+    <div class="rank-title">RANK STORE</div>
+    <div class="apho">
+        <div class="photo">
+            <div class="ph smp"></div>
+            <a href="https://im-tvb.github.io/tvbsmp.net/rank-eco.html" class="but">Flash-ECO</a>
+        </div>
+        <div class="photo">
+            <div class="ph plot"></div>
+            <a href="https://im-tvb.github.io/tvbsmp.net/rank-plot.html" class="but">Flash-Plot</a>
+        </div>
+        <div class="photo">
+            <div class="ph boxpvp"></div>
+            <a href="https://im-tvb.github.io/tvbsmp.net/rank-box.html" class="but">Flash-Box</a>
+        </div>
+    </div>
+    <div class="iel">
+        <div class="tex"> NOTE : ALL RANKS WILL EXPIRE IN 30DAYS !!!</div>
     </div>
 </body>
 </html>
