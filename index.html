@@ -1,0 +1,294 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 3D</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+        }
+        #error {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: red;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            display: none;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="crosshair">+</div>
+    <div id="error"></div>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = false; // Disable shadows for performance
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // Skybox
+        const skyboxSize = 500;
+        const skyboxGeometry = new THREE.BoxGeometry(skyboxSize, skyboxSize, skyboxSize);
+        const skyboxMaterials = [
+            new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ color: 0xb0e0e6, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ color: 0x4682b4, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
+        ];
+        const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
+        scene.add(skybox);
+
+        // Terrain generation
+        const blockSize = 1;
+        const terrainSize = 32;
+        const blocks = [];
+        const geometry = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
+        const material = new THREE.MeshLambertMaterial({ color: 0x55aa55 });
+
+        for (let x = -terrainSize / 2; x < terrainSize / 2; x++) {
+            for (let z = -terrainSize / 2; z < terrainSize / 2; z++) {
+                const block = new THREE.Mesh(geometry, material);
+                block.position.set(x * blockSize, 0, z * blockSize);
+                block.scale.set(1, 1, 1); // Explicitly ensure 1x1x1
+                scene.add(block);
+                blocks.push(block);
+            }
+        }
+
+        // Player setup
+        camera.position.set(0, 2, 5);
+        const clock = new THREE.Clock();
+        const moveSpeed = 6;
+        const rotationSensitivity = 0.1;
+        const jumpVelocity = 1;
+        const gravity = 5;
+        const groundY = 2;
+        const velocity = new THREE.Vector3();
+        const direction = new THREE.Vector3();
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+        let isJumping = false;
+        let yaw = 0;
+        let pitch = 0;
+
+        // Keyboard controls
+        document.addEventListener('keydown', (event) => {
+            switch (event.code) {
+                case 'KeyW': moveForward = true; break;
+                case 'KeyS': moveBackward = true; break;
+                case 'KeyA': moveLeft = true; break;
+                case 'KeyD': moveRight = true; break;
+                case 'UpKeyArrow': moveForward = true; break;
+                case 'DownKeyArrow': moveBackward = true; break;
+                case 'LeftKeyArrow': moveLeft = true; break;
+                case 'RightKeyArrow': moveRight = true; break;
+                case 'Space':
+                    if (!isJumping) {
+                        velocity.y = jumpVelocity;
+                        isJumping = true;
+                    }
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            switch (event.code) {
+                case 'KeyW': moveForward = false; break;
+                case 'KeyS': moveBackward = false; break;
+                case 'KeyA': moveLeft = false; break;
+                case 'KeyD': moveRight = false; break;
+                case 'KeyUpArrow': moveForward = false; break;
+                case 'KeyDownArrow': moveBackward = false; break;
+                case 'KeyLeftArrow': moveLeft = false; break;
+                case 'KeyRightArrow': moveRight = false; break;
+            }
+        });
+
+        // Pointer lock controls
+        const errorDiv = document.getElementById('error');
+        function showError(message) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
+            console.error(message);
+        }
+
+        if ('pointerLockElement' in document || 'mozPointerLockElement' in document) {
+            renderer.domElement.requestPointerLock = renderer.domElement.requestPointerLock || renderer.domElement.mozRequestPointerLock;
+            document.addEventListener('click', () => {
+                try {
+                    renderer.domElement.requestPointerLock();
+                } catch (e) {
+                    showError('Pointer lock failed: ' + e.message + '. Run this on a local server (e.g., http://localhost) using `http-server`, Python’s `http.server`, or VS Code Live Server. If in an iframe (e.g., CodePen), ensure `allow="pointer-lock"` is set. Open DevTools (F12) for details.');
+                }
+            });
+
+            document.addEventListener('pointerlockerror', () => {
+                showError('Pointer lock error: Run this on a local server (e.g., http://localhost) using `http-server`, Python’s `http.server`, or VS Code Live Server. If in an iframe (e.g., CodePen), ensure `allow="pointer-lock"` is set. Check DevTools (F12) Console for details.');
+            });
+
+            document.addEventListener('mousemove', (event) => {
+                if (document.pointerLockElement === renderer.domElement || document.mozPointerLockElement === renderer.domElement) {
+                    yaw -= event.movementX * rotationSensitivity * (Math.PI / 180);
+                    pitch -= event.movementY * rotationSensitivity * (Math.PI / 180);
+                    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
+                }
+            });
+        } else {
+            showError('Pointer lock not supported in this browser.');
+        }
+
+        // Block interaction
+        const raycaster = new THREE.Raycaster();
+        document.addEventListener('click', (event) => {
+            if (document.pointerLockElement === renderer.domElement || document.mozPointerLockElement === renderer.domElement) {
+                raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+                const intersects = raycaster.intersectObjects(blocks);
+                if (intersects.length > 0) {
+                    const intersect = intersects[0];
+                    if (event.button === 0) { // Left click: remove block
+                        scene.remove(intersect.object);
+                        blocks.splice(blocks.indexOf(intersect.object), 1);
+                    } else if (event.button === 2) { // Right click: place block
+                        const pos = intersect.object.position.clone();
+                        const normal = intersect.face.normal;
+                        pos.add(normal.multiplyScalar(blockSize));
+                        // Round position to ensure grid alignment
+                        pos.x = Math.round(pos.x);
+                        pos.y = Math.round(pos.y);
+                        pos.z = Math.round(pos.z);
+                        const newBlock = new THREE.Mesh(geometry, material);
+                        newBlock.position.copy(pos);
+                        newBlock.scale.set(1, 2, 1); // Ensure 1x1x1 size
+                        scene.add(newBlock);
+                        blocks.push(newBlock);
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('contextmenu', (event) => event.preventDefault());
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = Math.min(clock.getDelta(), 0.1);
+
+            // Update skybox position (X/Z only)
+            skybox.position.set(camera.position.x, skyboxSize / 2, camera.position.z);
+
+            // Apply rotation
+            camera.rotation.order = 'YXZ';
+            camera.rotation.y = yaw;
+            camera.rotation.x = pitch;
+
+            // Apply gravity
+            if (camera.position.y > groundY || velocity.y > 0) {
+                velocity.y -= gravity * delta;
+            }
+
+            // Update position
+            velocity.set(0, velocity.y, 0);
+            direction.z = Number(moveForward) - Number(moveBackward);
+            direction.x = Number(moveRight) - Number(moveLeft);
+            direction.normalize();
+
+            if (moveForward || moveBackward || moveLeft || moveRight) {
+                const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+                const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+                if (moveForward || moveBackward) {
+                    velocity.add(forward.multiplyScalar(direction.z * moveSpeed * delta));
+                }
+                if (moveLeft || moveRight) {
+                    velocity.add(right.multiplyScalar(direction.x * moveSpeed * delta));
+                }
+            }
+
+            // Update camera position
+            camera.position.add(velocity);
+
+            // Ground check
+            if (camera.position.y <= groundY && velocity.y <= 0) {
+                camera.position.y = groundY;
+                velocity.y = 0;
+                isJumping = false;
+            }
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
